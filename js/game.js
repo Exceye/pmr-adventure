@@ -1,6 +1,6 @@
 /* ---------- game ---------- */
 const P={x:384,y:300,d:0,st:0};
-let sc=OUT,gender='m',keys={},joy={x:0,y:0},dlg=false,cool=0,opened=false,playing=false,near=null,fa=0,pend=null,last=0;
+let sc=OUT,gender='m',keys={},joy={x:0,y:0},dlg=false,cool=0,opened=false,playing=false,near=null,fa=0,pend=null,last=0,ret={x:384,y:300};
 const rooms=[],fb=(x,y)=>R(x-5,y-6,10,6);
 function setScene(id,x,y){sc=id==='out'?OUT:(rooms[id]=rooms[id]||(id==6?mansionRoom():houseRoom(id)));
  if(x==null){x=sc.spawn[0];y=sc.spawn[1]}P.x=x;P.y=y;cool=30;
@@ -8,13 +8,13 @@ function setScene(id,x,y){sc=id==='out'?OUT:(rooms[id]=rooms[id]||(id==6?mansion
 function mv(dx,dy){const bx=sc.bx;let nx=P.x+dx;if(nx>bx[0]&&nx<bx[1]&&!sc.solids.some(r=>hit(fb(nx,P.y),r)))P.x=nx;
  let ny=P.y+dy;if(ny>bx[2]&&ny<bx[3]&&!sc.solids.some(r=>hit(fb(P.x,ny),r)))P.y=ny}
 function step(dt){
- if(pend){fa+=dt*6;if(fa>=1){fa=1;if(sc===OUT)setScene(pend.to);else setScene('out',OUT.doors[sc.n?NPCS.indexOf(sc.n):6].sx,OUT.doors[sc.n?NPCS.indexOf(sc.n):6].sy);pend=null}}else if(fa>0)fa=Math.max(0,fa-dt*5);
+ if(pend){fa+=dt*6;if(fa>=1){fa=1;if(sc===OUT){ret={x:pend.sx0,y:pend.sy0};setScene(pend.to)}else setScene('out',ret.x,ret.y);pend=null}}else if(fa>0)fa=Math.max(0,fa-dt*5);
  near=null;if(sc.npc&&Math.hypot(P.x-sc.npc.x,P.y-sc.npc.y)<30)near='npc';if(sc.chest&&Math.hypot(P.x-sc.chest.x,P.y-sc.chest.y)<34)near='chest';
  $('act').style.display=near&&!dlg&&playing?'block':'none';$('act').textContent=near=='chest'?'Buka Peti':'Bicara';
  if(dlg||!playing||pend)return;
  let dx=joy.x+((keys.ArrowRight||keys.d)?1:0)-((keys.ArrowLeft||keys.a)?1:0),dy=joy.y+((keys.ArrowDown||keys.s)?1:0)-((keys.ArrowUp||keys.w)?1:0);
  const m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m}
- if(m>.12){const v=62*dt;mv(dx*v,dy*v);P.st+=dt*8;P.d=Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?0:2)}else P.st=0;
+ if(m>.12){const v=62*dt;mv(dx*v,dy*v);P.st+=dt*8;{const ax=Math.abs(dx),ay=Math.abs(dy),horiz=P.d==1||P.d==3;const sideNow=horiz?ax>ay*.7:ax>ay*1.4;P.d=sideNow?(dx>0?1:3):(dy>0?0:2)}}else P.st=0;
  if(cool>0){cool--;return}
  for(const d of sc.doors)if(hit(fb(P.x,P.y),d.r)){pend=d;break}}
 function act(){

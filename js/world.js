@@ -7,9 +7,9 @@ const ospr=(img,x,y,ox,oy,by)=>({y:by,d:(cx,cy)=>b.drawImage(img,Math.round(x-cx
 const mans=mansionSpr(),fnt=fountainSpr(),wl=wellSpr(),lp=lampSpr(),bsh=bushSpr(),T1=treeSpr(),T2=pineSpr();
 OUT.solids.push(R(MX+4,0,216,MY+120),R(368+2,182,28,14),R(686,176,20,10),GARD,PEN,R(344,148,6,8),R(426,148,6,8));
 OUT.objs.push(ospr(mans,MX,MY,0,0,MY+120),ospr(fnt,368,168,0,0,200),ospr(wl,684,160,0,0,186),ospr(lp,342,128,0,0,156),ospr(lp,424,128,0,0,156));
-OUT.doors.push({r:R(MX+98,MY+118,28,6),to:6,sx:MX+112,sy:MY+138});
+OUT.doors.push({r:R(MX+98,MY+118,28,6),to:6,sx0:MX+112,sy0:MY+138});
 HS.forEach((h,i)=>{const sp=houseSpr(h[2],h[3]);OUT.solids.push(R(h[0]+2,h[1],76,68));OUT.objs.push(ospr(sp,h[0],h[1],0,0,h[1]+68));
- OUT.doors.push({r:R(h[0]+33,h[1]+66,14,6),to:i,sx:h[0]+40,sy:h[1]+84})});
+ OUT.doors.push({r:R(h[0]+33,h[1]+66,14,6),to:i,sx0:h[0]+40,sy0:h[1]+84})});
 {let s=5;const rn=()=>(s=s*16807%2147483647)/2147483647,blk=[...OUT.solids,GARD,PEN,...PATHS,R(MX,MY,224,150),R(360,160,48,50)].map(r=>R(r.x-18,r.y-24,r.w+36,r.h+48));
  for(let i=0;i<260&&OUT.objs.length<75;i++){const x=40+rn()*690,y=40+rn()*480,t=R(x-16,y-34,32,40);if(blk.some(r=>hit(t,r)))continue;
   const pine=rn()<.3;OUT.solids.push(R(x-4,y-5,8,5));OUT.objs.push(ospr(pine?T2:T1,x-(pine?12:16),y-(pine?38:42),0,0,y));blk.push(R(x-24,y-30,48,36))}
